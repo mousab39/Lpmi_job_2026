@@ -14,4 +14,26 @@ class Offer {
     required this.startDate,
     required this.location,
   });
+
+  Map<String, dynamic> toMap(){
+    return{
+      'id': id,
+      'title' : title,
+      'description': description,
+      'time': time,
+      'startDate': startDate.toIso8601String(),
+      'location': location,
+    };
+  }
+
+  factory Offer.fromMap(Map<String, dynamic> map){
+    return Offer(
+      id: map['id'],
+      title: map['title'] as String,
+      description: map['description'] as String,
+      time: map['time'] as int,
+      startDate: DateTime.parse(map['startDate'] as String),
+      location: map['location'] as String,
+    );
+  }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lpmi/conponent/custom_offer.dart';
 import 'package:lpmi/controller/home_controller.dart';
+import 'package:lpmi/model/offer.dart';
+import 'package:lpmi/screen/add_offer_screen.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,31 +24,51 @@ class _HomeScreenState extends State<HomeScreen> {
     final homeController = Provider.of<HomeController>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Offres")),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: homeController.offers.isEmpty
-            ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-          itemCount: homeController.offers.length,
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const Scaffold(
-                      body: Center(child: Text("Page détail offre")),
+      appBar: AppBar(
+        title: const Text("offres dispos"),
+        centerTitle: true,
+      ),
+      body: ListView.builder(
+        itemCount: homeController.offers.length,
+        itemBuilder: (context, index) {
+          final offer = homeController.offers[index];
+
+          return Row(
+            children: [
+              Expanded(child: CustomOffer(offer: offer)),
+              IconButton(
+                icon: const Icon(Icons.edit),
+                onPressed: () async {
+                  final updatedOffer = await Navigator.push<Offer>(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddOfferScreen(offer: offer),
                     ),
-                  ),
-                );
-              },
-              child: CustomOffer(
-                offer: homeController.offers[index],
+                  );
+                  if (updatedOffer != null) {
+                    homeController.updateOffer(updatedOffer);
+                  }
+                },
               ),
-            );
-          },
-        ),
+              IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: () {
+                  homeController.deleteOffer(offer.id);
+                },
+              ),
+            ],
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddOfferScreen()),
+          );
+        },
+        tooltip: "ajouter une offre",
+        child: const Icon(Icons.add),
       ),
     );
   }
