@@ -24,10 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final homeController = Provider.of<HomeController>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("offres dispos"),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text("offres dispos"), centerTitle: true),
       body: ListView.builder(
         itemCount: homeController.offers.length,
         itemBuilder: (context, index) {
