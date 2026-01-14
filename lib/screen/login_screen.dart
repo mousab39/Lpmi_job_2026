@@ -49,21 +49,33 @@ class LoginScreen extends StatelessWidget {
                 elevatedButtonText: "Se connecter",
                 textButtonText: "Pas de compte ? S'inscrire",
 
-                elevatedButtonClicked: () {
-                  loginController.checkLogin().then((ok) {
-                    if (ok) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Login Failed')),
-                      );
-                    }
-                  });
+                elevatedButtonClicked: () async {
+                  final ok = await loginController.checkLogin();
+
+                  if (ok) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Login successful"),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+
+                    await Future.delayed(const Duration(milliseconds: 800));
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Login failed"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 },
 
                 textButtonClicked: () {

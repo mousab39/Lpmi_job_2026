@@ -24,7 +24,10 @@ class _HomeScreenState extends State<HomeScreen> {
     final homeController = Provider.of<HomeController>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("offres dispos"), centerTitle: true),
+      appBar: AppBar(
+        title: const Text("offres dispos"),
+        centerTitle: true,
+      ),
       body: ListView.builder(
         itemCount: homeController.offers.length,
         itemBuilder: (context, index) {
@@ -32,7 +35,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
           return Row(
             children: [
-              Expanded(child: CustomOffer(offer: offer)),
+              Expanded(
+                child: CustomOffer(offer: offer),
+              ),
               IconButton(
                 icon: const Icon(Icons.edit),
                 onPressed: () async {
@@ -48,9 +53,30 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
               IconButton(
-                icon: const Icon(Icons.delete),
+                icon: const Icon(Icons.delete, color: Colors.red),
                 onPressed: () {
-                  homeController.deleteOffer(offer.id);
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text("Confirmation"),
+                      content: const Text(
+                        "Voulez-vous supprimer cette offre ?",
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text("Annuler"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            homeController.deleteOffer(offer.id);
+                          },
+                          child: const Text("Oui"),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               ),
             ],
@@ -58,14 +84,16 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        tooltip: "ajouter une offre",
+        child: const Icon(Icons.add),
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AddOfferScreen()),
+            MaterialPageRoute(
+              builder: (context) => const AddOfferScreen(),
+            ),
           );
         },
-        tooltip: "ajouter une offre",
-        child: const Icon(Icons.add),
       ),
     );
   }
